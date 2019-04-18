@@ -26,7 +26,7 @@ cita_info(){
         echo "Operating system info" >> ${CITA_INFO_DIR}/cita_info.txt
         lsb_release -a  >> ${CITA_INFO_DIR}/cita_info.txt
         
-	node_list=`find ./ -name "privkey" | awk -F "/" '{print $2"/"$3 }'`
+	node_list=`find ./ -name "network.toml" | awk -F "/" '{print $2"/"$3 }' | grep -v template`
         for i in $node_list:
             do
             i=`echo ${i} |awk -F ":" '{print $1}'`
