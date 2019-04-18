@@ -56,7 +56,7 @@ cita_info(){
 usage(){
     echo "      usage: $0 CITA DIR"
     echo "      Please fill in the CITA real deployment directory after the script. "
-    echo "      ./check_cita_health.sh /data/cita_secp256k1_sha3"
+    echo "      ./cita-op-helper /data/cita_secp256k1_sha3"
 
 }
 

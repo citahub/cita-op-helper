@@ -18,15 +18,15 @@ CITA 进程信息
 
 ### 获取脚本
 ```
-curl -O https://raw.githubusercontent.com/cryptape/cita-op-helper/master/check_cita_health.sh
+curl -O https://raw.githubusercontent.com/cryptape/cita-op-helper/master/cita-op-helper
 ```
 
 ###  执行
 
 运行时请在脚本后面填上CITA 部署路径，本地案例部署路径为：/data/cita_secp256k1_sha3
 ```
-chmod +x ./check_cita_health.sh
-./check_cita_health.sh /data/cita_secp256k1_sha3
+chmod +x ./cita-op-helper
+./cita-op-helper /data/cita_secp256k1_sha3
 ```
 返回
 ````
