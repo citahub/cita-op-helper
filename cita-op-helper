@@ -17,77 +17,76 @@ cita-network
 "
 
 cita_info(){
-	echo -e "\e[1;32m CITA process info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
-	ps -ef | grep -E "cita-|rabbitmq" |grep -v grep |wc -l  >> ${CITA_INFO_DIR}/cita_info.txt
-	ps -ef | grep -E "cita-|rabbitmq" |grep -v grep >> ${CITA_INFO_DIR}/cita_info.txt
+  echo -e "\e[1;32m CITA process info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
+  ps -ef | grep -E "cita-|rabbitmq" |grep -v grep |wc -l  >> ${CITA_INFO_DIR}/cita_info.txt
+  ps -ef | grep -E "cita-|rabbitmq" |grep -v grep >> ${CITA_INFO_DIR}/cita_info.txt
 
-	echo -e "\e[1;32m Memory info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
-	free -h >> ${CITA_INFO_DIR}/cita_info.txt
+  echo -e "\e[1;32m Memory info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
+  free -h >> ${CITA_INFO_DIR}/cita_info.txt
 
-	echo -e "\e[1;32m Disk info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
-	df -h >> ${CITA_INFO_DIR}/cita_info.txt
+  echo -e "\e[1;32m Disk info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
+  df -h >> ${CITA_INFO_DIR}/cita_info.txt
 
-	echo -e "\e[1;32m Operating system info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
-	lsb_release -a  >> ${CITA_INFO_DIR}/cita_info.txt
+  echo -e "\e[1;32m Operating system info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
+  lsb_release -a  >> ${CITA_INFO_DIR}/cita_info.txt
 
-    echo -e "\e[1;32m CPU info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
-    cpu_core=`grep 'core id' /proc/cpuinfo |wc -l`
-    echo "cpu_core:  ${cpu_core}"  >> ${CITA_INFO_DIR}/cita_info.txt
-    top -n 1 >> ${CITA_INFO_DIR}/cita_info.txt
-    echo "#######The CPU uses the top 50 processes#######" >> ${CITA_INFO_DIR}/cita_info.txt
-    ps  -eo user,pid,ppid,tid,time,%cpu,cmd |sort -k 6 -r |head -50 >> ${CITA_INFO_DIR}/cita_info.txt
+  echo -e "\e[1;32m CPU info \e[0m" >> ${CITA_INFO_DIR}/cita_info.txt
+  cpu_core=`grep 'core id' /proc/cpuinfo |wc -l`
+  echo "cpu_core:  ${cpu_core}"  >> ${CITA_INFO_DIR}/cita_info.txt
+  top -n 1 >> ${CITA_INFO_DIR}/cita_info.txt
+  echo "#######The CPU uses the top 50 processes#######" >> ${CITA_INFO_DIR}/cita_info.txt
+  ps  -eo user,pid,ppid,tid,time,%cpu,cmd |sort -k 6 -r |head -50 >> ${CITA_INFO_DIR}/cita_info.txt
 
-	node_list=`find ./ -name "network.toml" | awk -F "/" '{print $2"/"$3 }' | grep -v template`
-	for i in $node_list; do
-		i=`echo ${i} |awk -F ":" '{print $1}'`
-		mkdir -p ${CITA_INFO_DIR}/${i}/logs
-        for z in ${CITA_PROCESS}; do
-           tail -n ${LOG_COUNT} ${i}/logs/${z}.log > ${CITA_INFO_DIR}/${i}/logs/${z}.log
-           cp -rp ${i}/*.toml ${CITA_INFO_DIR}/${i}/
-        done
-	done
+  node_list=`find ./ -name "network.toml" | awk -F "/" '{print $2"/"$3 }' | grep -v template`
+  for i in $node_list; do
+    i=`echo ${i} |awk -F ":" '{print $1}'`
+    mkdir -p ${CITA_INFO_DIR}/${i}/logs
+    for z in ${CITA_PROCESS}; do
+      tail -n ${LOG_COUNT} ${i}/logs/${z}.log > ${CITA_INFO_DIR}/${i}/logs/${z}.log
+      cp -rp ${i}/*.toml ${CITA_INFO_DIR}/${i}/
+    done
+  done
 
-	cd /tmp/
-	tar czf cita_info.tar.gz cita_info
-	echo -e " \e[1;32m ##### Information collection is complete. . . ##### \e[0m"
-	echo -e " \e[1;32m Please submit the /tmp/cita_info.tar.gz file to the administrator to help troubleshoot the issue. \e[0m"
+  cd /tmp/
+  tar czf cita_info.tar.gz cita_info
+  echo -e " \e[1;32m ##### Information collection is complete. . . ##### \e[0m"
+  echo -e " \e[1;32m Please submit the /tmp/cita_info.tar.gz file to the administrator to help troubleshoot the issue. \e[0m"
 }
 
 execute (){
-    if [ -d "$CITA_DIR" ] && echo "${LOG_COUNT}"| [ -n "`sed -n '/^[0-9][0-9]*$/p'`" ]; then
-        cd $CITA_DIR
-        if [  -f "./env.sh" ]; then
-            echo -e "\e[1;32m CITA software version \e[0m" > ${CITA_INFO_DIR}/cita_info.txt
-            ./env.sh ./bin/cita-jsonrpc --version | grep JsonRpc |awk '{print $2}' >> ${CITA_INFO_DIR}/cita_info.txt
-            cita_info
-	    elif [  -f "bin/cita-env" ]; then
-            echo -e "\e[1;32m CITA software version number \e[0m" > ${CITA_INFO_DIR}/cita_info.txt
-            ./bin/cita-env ./bin/cita-jsonrpc --version | grep JsonRpc |awk '{print $2}' >> ${CITA_INFO_DIR}/cita_info.txt
-	        cita_info
-	    else
-			echo -e "\e[1;31m The ${CITA_DIR} path is not the deployment directory of CITA. Please verify the path. \e[0m"
-			usage
-        fi
+  if [ -d "$CITA_DIR" ] && echo "${LOG_COUNT}"| [ -n "`sed -n '/^[0-9][0-9]*$/p'`" ]; then
+    cd $CITA_DIR
+    if [  -f "./env.sh" ]; then
+      echo -e "\e[1;32m CITA software version \e[0m" > ${CITA_INFO_DIR}/cita_info.txt
+      ./env.sh ./bin/cita-jsonrpc --version | grep JsonRpc |awk '{print $2}' >> ${CITA_INFO_DIR}/cita_info.txt
+      cita_info
+    elif [  -f "bin/cita-env" ]; then
+      echo -e "\e[1;32m CITA software version number \e[0m" > ${CITA_INFO_DIR}/cita_info.txt
+      ./bin/cita-env ./bin/cita-jsonrpc --version | grep JsonRpc |awk '{print $2}' >> ${CITA_INFO_DIR}/cita_info.txt
+      cita_info
     else
-	    echo -e "\e[1;31m The entered directory ${CITA_DIR} does not exist or the number of logs ${LOG_COUNT} is incorrect. Please check. \e[0m"
-	    usage
+      echo -e "\e[1;31m The ${CITA_DIR} path is not the deployment directory of CITA. Please verify the path. \e[0m"
+      usage
     fi
+  else
+    echo -e "\e[1;31m The entered directory ${CITA_DIR} does not exist or the number of logs ${LOG_COUNT} is incorrect. Please check. \e[0m"
+    usage
+  fi
 }
 
 usage(){
-    echo "      usage: $0 CITA DIR"
-	echo "      By default, 200 lines of logs are collected. For the number of custom logs, please fill in the number after the script."
-    echo "      Please fill in the CITA real deployment directory after the script. "
-    echo "      ./cita-op-helper /data/cita_secp256k1_sha3"
-    echo "      ./cita-op-helper /data/cita_secp256k1_sha3 500"
-
+  echo "      usage: $0 CITA DIR"
+  echo "      By default, 200 lines of logs are collected. For the number of custom logs, please fill in the number after the script."
+  echo "      Please fill in the CITA real deployment directory after the script. "
+  echo "      ./cita-op-helper /data/cita_secp256k1_sha3"
+  echo "      ./cita-op-helper /data/cita_secp256k1_sha3 500"
 }
 
 if [ $# -lt 1 ]; then
-    usage
+  usage
 elif [ $# -ge 2 ]; then
-    LOG_COUNT="$2"
-    execute
+  LOG_COUNT="$2"
+  execute
 else
-    execute
+  execute
 fi
