@@ -42,8 +42,9 @@ cita_info(){
     i=`echo ${i} |awk -F ":" '{print $1}'`
     mkdir -p ${CITA_INFO_DIR}/${i}/logs
     for z in ${CITA_PROCESS}; do
-      tail -n ${LOG_COUNT} ${i}/logs/${z}.log > ${CITA_INFO_DIR}/${i}/logs/${z}.log
       cp -rp ${i}/*.toml ${CITA_INFO_DIR}/${i}/
+      cp -rp ${i}/.env ${CITA_INFO_DIR}/${i}/
+      tail -n ${LOG_COUNT} ${i}/logs/${z}.log > ${CITA_INFO_DIR}/${i}/logs/${z}.log
     done
   done
 
