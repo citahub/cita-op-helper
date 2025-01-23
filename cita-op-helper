@@ -38,8 +38,8 @@ cita_info(){
   ps  -eo user,pid,ppid,tid,time,%cpu,cmd |sort -k 6 -r |head -50 >> ${CITA_INFO_DIR}/cita_info.txt
 
   node_list=`find ./ -name "network.toml" | awk -F "/" '{print $2"/"$3 }' | grep -v template`
-  for i in $node_list; do
-    i=`echo ${i} |awk -F ":" '{print $1}'`
+  for node in $node_list; do
+    i=`echo ${node} |awk -F ":" '{print $NF}'`
     mkdir -p ${CITA_INFO_DIR}/${i}/logs
     for z in ${CITA_PROCESS}; do
       cp -rp ${i}/*.toml ${CITA_INFO_DIR}/${i}/
@@ -57,18 +57,7 @@ cita_info(){
 execute (){
   if [ -d "$CITA_DIR" ] && echo "${LOG_COUNT}"| [ -n "`sed -n '/^[0-9][0-9]*$/p'`" ]; then
     cd $CITA_DIR
-    if [  -f "./env.sh" ]; then
-      echo -e "\e[1;32m CITA software version \e[0m" > ${CITA_INFO_DIR}/cita_info.txt
-      ./env.sh ./bin/cita-jsonrpc --version | grep JsonRpc |awk '{print $2}' >> ${CITA_INFO_DIR}/cita_info.txt
-      cita_info
-    elif [  -f "bin/cita-env" ]; then
-      echo -e "\e[1;32m CITA software version number \e[0m" > ${CITA_INFO_DIR}/cita_info.txt
-      ./bin/cita-env ./bin/cita-jsonrpc --version | grep JsonRpc |awk '{print $2}' >> ${CITA_INFO_DIR}/cita_info.txt
-      cita_info
-    else
-      echo -e "\e[1;31m The ${CITA_DIR} path is not the deployment directory of CITA. Please verify the path. \e[0m"
-      usage
-    fi
+    cita_info
   else
     echo -e "\e[1;31m The entered directory ${CITA_DIR} does not exist or the number of logs ${LOG_COUNT} is incorrect. Please check. \e[0m"
     usage
@@ -76,11 +65,11 @@ execute (){
 }
 
 usage(){
-  echo "      usage: $0 CITA DIR"
+  echo "      usage: $1 CITA DIR"
   echo "      By default, 200 lines of logs are collected. For the number of custom logs, please fill in the number after the script."
   echo "      Please fill in the CITA real deployment directory after the script. "
-  echo "      ./cita-op-helper /data/cita_secp256k1_sha3"
-  echo "      ./cita-op-helper /data/cita_secp256k1_sha3 500"
+  echo "      ./cita-op-helper /data/cita_sm2_sm3"
+  echo "      ./cita-op-helper /data/cita_sm2_sm3 500"
 }
 
 if [ $# -lt 1 ]; then

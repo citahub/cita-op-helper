@@ -25,15 +25,15 @@ curl -O https://raw.githubusercontent.com/cryptape/cita-op-helper/master/cita-op
 ###  执行
 默认只获取200行日志，需要更多日志信息，请在脚本第二个参数填写日志数量。
 
-运行时请在脚本后面填上CITA 部署路径，本地案例部署路径为：/data/cita_secp256k1_sha3
+运行时请在脚本后面填上CITA 部署路径，本地案例部署路径为：/data/cita_sm2_sm3
 ```
 chmod +x ./cita-op-helper
-./cita-op-helper /data/cita_secp256k1_sha3
-./cita-op-helper /data/cita_secp256k1_sha3 1000
+./cita-op-helper /data/cita_sm2_sm3
+./cita-op-helper /data/cita_sm2_sm3 1000
 ```
 返回
 ```
-/data/cita_secp256k1_sha3
+/data/cita_sm2_sm3
   Please submit the /tmp/cita_info.tar.gz file to the administrator to help troubleshoot the issue. 
 ```
 请将/tmp/目录下的 cita_info.tar.gz 文件提交给官方技术人员排查。
