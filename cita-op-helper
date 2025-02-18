@@ -37,9 +37,9 @@ cita_info(){
   echo "#######The CPU uses the top 50 processes#######" >> ${CITA_INFO_DIR}/cita_info.txt
   ps  -eo user,pid,ppid,tid,time,%cpu,cmd |sort -k 6 -r |head -50 >> ${CITA_INFO_DIR}/cita_info.txt
 
-  node_list=`find ./ -name "network.toml" | awk -F "/" '{print $2"/"$3 }' | grep -v template`
+  node_list=`find ./ -name "network.toml" | awk -F "/" '{print $2":"$3 }' | grep -v template`
   for node in $node_list; do
-    i=`echo ${node} |awk -F ":" '{print $NF}'`
+    i=`echo ${node} |awk -F ":" '{print $1}'`
     mkdir -p ${CITA_INFO_DIR}/${i}/logs
     for z in ${CITA_PROCESS}; do
       cp -rp ${i}/*.toml ${CITA_INFO_DIR}/${i}/
